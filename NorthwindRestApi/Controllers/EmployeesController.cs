@@ -15,8 +15,35 @@ namespace NorthwindRestApi.Controllers
         [HttpGet]
         public IActionResult GetAllEmployees()
         {
-            var tyontekijat = db.Employees.ToList();
-            return Ok(tyontekijat);
+            try { 
+                var tyontekijat = db.Employees.ToList();
+                return Ok(tyontekijat);
+            }
+            catch (Exception e)
+            {
+                return BadRequest("Tapahtui virhe. Lue lisää:" + e.InnerException);
+            }
+        }
+
+        // Hae yksi työntekijä id:n perusteella
+        [HttpGet("{id}")]
+        public IActionResult GetOneEmployeeById(int id)
+        {
+            try { 
+                var tyontekija = db.Employees.Find(id);
+                if (tyontekija != null)
+                {
+                    return Ok(tyontekija);
+                }
+                else
+                {
+                    return NotFound($"Työntekijää id:llä {id} ei löydy.");
+                }
+            }
+            catch (Exception e)
+            {
+                return BadRequest("Tapahtui virhe. Lue lisää:" + e.InnerException);
+            }
         }
     }
 }

@@ -15,8 +15,36 @@ namespace NorthwindRestApi.Controllers
         [HttpGet]
         public IActionResult GetAllCustomers()
         {
-            var asiakkaat = db.Customers.ToList();
-            return Ok(asiakkaat);
+            try {
+                var asiakkaat = db.Customers.ToList();
+                return Ok(asiakkaat);
+            }
+            catch (Exception e)
+            {
+                return BadRequest("Tapahtui virhe. Lue lisää:" + e.InnerException);
+            }
+        }
+
+        // Hae yksi asiakas id:n perusteella
+        [HttpGet("{id}")]
+        public IActionResult GetOneCustomerById(string id)
+        {
+            try { 
+            var asiakas = db.Customers.Find(id);
+            if (asiakas != null)
+            {
+                return Ok(asiakas);
+            }
+            else
+            {
+                //return NotFound("Asiakasta id:llä" + id + "ei löydy."); // Toinen tapa
+                return NotFound($"Asiakasta id:llä {id} ei löydy."); // string interpolation
+            }
+            }
+            catch (Exception e)
+            {
+                return BadRequest("Tapahtui virhe. Lue lisää:" + e.InnerException);
+            }
         }
     }
 }

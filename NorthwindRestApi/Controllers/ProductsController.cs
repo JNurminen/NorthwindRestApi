@@ -15,8 +15,35 @@ namespace NorthwindRestApi.Controllers
         [HttpGet]
         public IActionResult GetAllProducts()
         {
-            var tuotteet = db.Products.ToList();
-            return Ok(tuotteet);
+            try { 
+                var tuotteet = db.Products.ToList();
+                return Ok(tuotteet);
+            }
+            catch (Exception e)
+            {
+                return BadRequest("Tapahtui virhe. Lue lisää:" + e.InnerException);
+            }
+        }
+
+        // Hae yksi tuote id:n perusteella
+        [HttpGet("{id}")]
+        public IActionResult GetOneProductById(int id)
+        {
+            try { 
+                var tuote = db.Products.Find(id);
+                if (tuote != null)
+                {
+                    return Ok(tuote);
+                }
+                else
+                {
+                    return NotFound($"Tuotetta id:llä {id} ei löydy.");
+                }
+            }
+            catch (Exception e)
+            {
+                return BadRequest("Tapahtui virhe. Lue lisää:" + e.InnerException);
+            }
         }
     }
 }
